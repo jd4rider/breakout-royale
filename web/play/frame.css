@@ -19,10 +19,9 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  /* Locked portrait: on a wide window the arena becomes a 9:16 column
-     instead of stretching into a landscape playfield. */
-  max-width: calc(100vh * 9 / 16);
-  margin: 0 auto;
+  /* Fill the frame exactly. The engine keeps the 9:16 arena centred and
+     letterboxes it itself, so capping the canvas here only left a strip of
+     empty page on the right (most visibly inside the arcade player). */
   outline: none;
   touch-action: none;
 }

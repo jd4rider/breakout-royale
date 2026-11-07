@@ -62,6 +62,7 @@ var _glow := Color("#8bfff2")
 var _speed := 9.0
 
 var _paddle: Node3D
+var _paddle_light: OmniLight3D
 var _paddle_x := 0.0
 var _paddle_scale := 1.0
 var _pointer_held := false
@@ -123,30 +124,39 @@ func _build_environment() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color(String(_world.get("to", "#080512")))
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("#9fb3d9")
-	env.ambient_light_energy = 0.85
+	env.ambient_light_color = _accent.lerp(Color("#cdd9ff"), 0.45)
+	env.ambient_light_energy = 0.62
 	environment.environment = env
 	add_child(environment)
 
 	var key := DirectionalLight3D.new()
-	key.light_color = Color("#dfe9ff")
-	key.light_energy = 1.5
-	key.rotation = Vector3(-0.8, -0.45, 0)
+	key.light_color = Color("#fff4e2")
+	key.light_energy = 2.3
+	key.rotation = Vector3(deg_to_rad(-52.0), deg_to_rad(-28.0), 0)
 	add_child(key)
 
 	var fill := OmniLight3D.new()
 	fill.light_color = _accent
-	fill.light_energy = 5.0
-	fill.omni_range = 22.0
-	fill.position = Vector3(0, 4, 8)
+	fill.light_energy = 7.0
+	fill.omni_range = 26.0
+	fill.position = Vector3(0, 4.5, 9)
 	add_child(fill)
 
 	var rim := OmniLight3D.new()
 	rim.light_color = _glow
-	rim.light_energy = 2.4
-	rim.omni_range = 16.0
-	rim.position = Vector3(0, -6, 6)
+	rim.light_energy = 3.4
+	rim.omni_range = 18.0
+	rim.position = Vector3(0, -7, 7)
 	add_child(rim)
+
+	# A complement-coloured side light is what stops the arena reading as a
+	# single flat tint: one side of every brick catches a different hue.
+	var side := OmniLight3D.new()
+	side.light_color = Color.from_hsv(fposmod(_accent.h + 0.5, 1.0), 0.85, 1.0)
+	side.light_energy = 4.6
+	side.omni_range = 21.0
+	side.position = Vector3(-7.5, 2.0, 6.5)
+	add_child(side)
 
 	var backdrop := MeshInstance3D.new()
 	var quad := QuadMesh.new()
@@ -163,10 +173,12 @@ uniform vec4 glow_color : source_color;
 void fragment() {
 	vec2 uv = UV;
 	vec3 col = mix(bottom_color.rgb, top_color.rgb, smoothstep(0.0, 1.0, uv.y));
-	float band = smoothstep(0.55, 0.0, abs(uv.y - 0.58));
-	col += glow_color.rgb * band * 0.22;
-	float nebula = smoothstep(0.42, 0.0, abs(uv.x - 0.5 - sin(uv.y * 3.1) * 0.09));
-	col += glow_color.rgb * nebula * 0.10;
+	float band = smoothstep(0.13, 0.0, abs(uv.y - 0.58));
+	col += glow_color.rgb * band * 0.28;
+	float nebula = smoothstep(0.15, 0.0, abs(uv.x - 0.5 - sin(uv.y * 3.1) * 0.09));
+	col += glow_color.rgb * nebula * 0.16;
+	float horizon = smoothstep(0.24, 0.0, abs(uv.y - 0.18));
+	col += glow_color.rgb * horizon * 0.08;
 	float star = step(0.9976, fract(sin(dot(floor(uv * vec2(230.0, 360.0)), vec2(12.9898, 78.233))) * 43758.5453));
 	col += vec3(star) * 0.7;
 	float vignette = smoothstep(0.95, 0.25, length(uv - vec2(0.5, 0.55)));
@@ -181,6 +193,22 @@ void fragment() {
 	material.set_shader_parameter("glow_color", _accent)
 	backdrop.material_override = material
 	add_child(backdrop)
+
+	# Loose glowing debris drifting behind the wall, so the empty air between
+	# the paddle and the bricks reads as depth instead of a flat field.
+	for i in range(16):
+		var mote := MeshInstance3D.new()
+		var shape := BoxMesh.new()
+		var size := randf_range(0.06, 0.19)
+		shape.size = Vector3(size, size, size)
+		mote.mesh = shape
+		mote.material_override = Models.glow_material(_glow, randf_range(0.5, 1.4))
+		mote.position = Vector3(
+			randf_range(-7.5, 7.5),
+			randf_range(-9.0, 8.5),
+			randf_range(-11.0, -3.0))
+		mote.rotation = Vector3(randf() * TAU, randf() * TAU, randf() * TAU)
+		add_child(mote)
 
 	# A distant ring behind the playfield gives the arena real depth.
 	for i in range(2):
@@ -197,9 +225,11 @@ void fragment() {
 
 	_camera = Camera3D.new()
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_camera.size = 23.2
-	_camera.position = Vector3(0, 0.75, 26)
-	_camera.rotation = Vector3(deg_to_rad(-7.0), 0, 0)
+	_camera.size = 22.4
+	# Framed a little high so the wall clears the HUD and the paddle sits low in
+	# the thumb zone, while the tilt still shows the top face of every brick.
+	_camera.position = Vector3(0, 3.1, 26)
+	_camera.rotation = Vector3(deg_to_rad(-10.0), 0, 0)
 	_camera_base = _camera.position
 	add_child(_camera)
 	_camera.current = true
@@ -228,9 +258,18 @@ func _build_arena() -> void:
 	_paddle = Models.spawn("paddle", _glow)
 	if _paddle == null:
 		_paddle = Node3D.new()
-	Models.paint(_paddle, Color("#c8ecff"), 0.25)
+	Models.paint(_paddle, Color("#dbeeff"), 0.4)
 	_paddle.position = Vector3(0, PADDLE_Y, 0)
 	add_child(_paddle)
+
+	# The paddle carries its own light, so the player's craft glows on the board
+	# instead of blending into the floor.
+	_paddle_light = OmniLight3D.new()
+	_paddle_light.light_color = _glow
+	_paddle_light.light_energy = 3.2
+	_paddle_light.omni_range = 6.5
+	_paddle_light.position = Vector3(0, PADDLE_Y, 1.2)
+	add_child(_paddle_light)
 
 
 func _load_level(id: int) -> void:
@@ -270,9 +309,10 @@ func _update_speed() -> void:
 
 func _spawn_brick(entry: Dictionary) -> void:
 	var kind := String(entry["t"])
-	var node := Models.spawn(_model_for(kind), _color_for(kind))
-	var paint_color := _color_for(kind)
-	var emission := 0.22
+	var row := int(entry["r"])
+	var paint_color := _row_color(row) if _color_for(kind) == _accent else _color_for(kind)
+	var node := Models.spawn(_model_for(kind), paint_color)
+	var emission := 0.34
 	match kind:
 		"steel":
 			paint_color = Color("#59607a")
@@ -324,6 +364,15 @@ func _color_for(kind: String) -> Color:
 			return Color("#c7b0ff")
 		_:
 			return _accent
+
+
+## Ordinary bricks walk the hue wheel a little per row, so the wall reads as a
+## colourful stack rather than one flat slab of the world accent.
+func _row_color(row: int) -> Color:
+	var hue := fposmod(_accent.h + float(row) * 0.058, 1.0)
+	var saturation := clampf(_accent.s * 1.08 + 0.2, 0.0, 1.0)
+	var value := clampf(_accent.v * 1.04 + 0.1, 0.0, 1.0)
+	return Color.from_hsv(hue, saturation, value)
 
 
 func _brick_position(c: int, r: int) -> Vector3:
@@ -1377,6 +1426,8 @@ func _animate(delta: float) -> void:
 		var target_roll := clampf((_paddle_x - _paddle.position.x) * -0.4, -0.3, 0.3)
 		_paddle.rotation.z = lerpf(_paddle.rotation.z, target_roll, clampf(delta * 8.0, 0.0, 1.0))
 		_paddle.position.y = PADDLE_Y + sin(elapsed * 2.2) * 0.03
+		if _paddle_light != null:
+			_paddle_light.position = Vector3(_paddle.position.x, PADDLE_Y + 0.2, 1.2)
 
 
 # --------------------------------------------------------------------------

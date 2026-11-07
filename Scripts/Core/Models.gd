@@ -102,9 +102,12 @@ static func paint(node: Node, color: Color, emission := 0.2) -> void:
 	if material == null:
 		material = StandardMaterial3D.new()
 		material.albedo_color = color
-		material.roughness = 0.38
-		material.metallic = 0.3
-		material.metallic_specular = 0.65
+		material.roughness = 0.26
+		material.metallic = 0.45
+		material.metallic_specular = 0.75
+		material.rim_enabled = true
+		material.rim = 0.55
+		material.rim_tint = 0.5
 		if emission > 0.0:
 			material.emission_enabled = true
 			material.emission = color

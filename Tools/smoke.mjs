@@ -139,8 +139,8 @@ const wideLayout = await widePage.evaluate(() => {
 })
 console.log('landscape layout', JSON.stringify(wideLayout))
 if (!wideLayout.canvas) failures.push('landscape: no canvas')
-else if (wideLayout.canvas.w >= wideLayout.canvas.h) {
-  failures.push(`landscape: the arena was not locked to portrait (${wideLayout.canvas.w}x${wideLayout.canvas.h})`)
+else if (wideLayout.canvas.w !== 1280 || wideLayout.canvas.h !== 720) {
+  failures.push(`landscape: the canvas should fill the frame (${wideLayout.canvas.w}x${wideLayout.canvas.h})`)
 }
 if (!wideLayout.rotateVisible) failures.push('landscape: the portrait gate did not appear')
 await widePage.screenshot({ path: '/tmp/br-shots/5-landscape.png' })

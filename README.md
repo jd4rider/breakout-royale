@@ -78,9 +78,9 @@ web-app manifest declares `"orientation": "portrait"`.
 
 ## Portrait lock
 
-The game is portrait-only, at every size. The canvas is a centred 9:16 column,
-landscape shows a rotate gate (desktop included), and `screen.orientation.lock`
-is attempted from the first tap.
+The game is portrait-only, at every size. The canvas fills its frame exactly and
+the engine keeps the 9:16 arena centred inside it, landscape shows a rotate gate
+(desktop included), and `screen.orientation.lock` is attempted from the first tap.
 
 
 ## Credits
