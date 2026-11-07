@@ -1,0 +1,11 @@
+{
+  "name": "Breakout Royale 3D",
+  "short_name": "Breakout Royale",
+  "description": "A portrait-first 3D brick-breaker with 1,000 levels, 20 worlds and 40 power-ups. A Little Joy Arcade original.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05030c",
+  "theme_color": "#080512"
+}

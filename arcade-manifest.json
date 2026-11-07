@@ -1,0 +1,36 @@
+{
+  "id": "breakout-royale",
+  "name": "Breakout Royale 3D",
+  "tagline": "Twenty worlds. One thousand walls. Break them all.",
+  "description": "A portrait-first 3D brick-breaker built in Godot 4 and exported to the web. Breakout Royale 3D turns the classic paddle into a neon arena: 1,000 levels across 20 themed worlds, 20 multi-phase bosses, 40 power-ups with real behaviours, and seven ways to play. The ball runs on a fixed 120 Hz step with swept collisions, so a hit is a hit on every screen and a fast ball cannot tunnel through a brick. Every level is generated from a seed and validated headless before it ships, and your progress syncs through the Little Joy Arcade account.",
+  "categories": ["Arcade", "Casual"],
+  "runtime": "Godot 4",
+  "version": "1.0.0",
+  "updated": "2026-11-07",
+  "status": "live",
+  "featured": true,
+  "playUrl": "https://jd4rider.github.io/breakout-royale/",
+  "siteUrl": "https://jd4rider.github.io/breakout-royale/",
+  "repoUrl": "https://github.com/jd4rider/breakout-royale",
+  "downloads": [],
+  "cover": { "from": "#ff3fd8", "to": "#1c0b33", "emoji": "🧱" },
+  "highlights": [
+    "1,000 campaign levels over 20 worlds, each board generated from a seed and validated in CI",
+    "20 bosses with three phases each, from Tidebreaker to the Royale Sovereign",
+    "40 power-ups that change the rally: multiball, fire, chain lightning, drones, laser paddles, risky pickups and more",
+    "Locked portrait presentation on every screen, with drag-anywhere touch controls plus mouse and keyboard",
+    "Fixed 120 Hz deterministic physics with swept collisions, so fast balls never tunnel",
+    "Blender-authored paddle, bricks, capsules and boss core with per-world palettes",
+    "Little Joy Arcade account, cloud saves and trophies, with a local save that always works offline",
+    "Endless, Survival, Boss Rush, Daily Challenge, Zen Patrol and Arcade Classic modes"
+  ],
+  "howToPlay": [
+    "Drag anywhere on the screen to slide the paddle. Mouse movement and the arrow keys work on desktop.",
+    "Tap or press Space to launch. Where the ball lands on the paddle sets the angle: centre goes steep, edges go wide.",
+    "Catch falling capsules for power-ups. The red-ringed ones are risky: they change the rally against you.",
+    "Break every brick to clear a board, or take down the boss core on boss levels.",
+    "Earn stars for score: par gives two stars, 145% of par gives three."
+  ],
+  "levels": "1,000 levels · 20 worlds · 20 bosses + endless, survival, boss rush, daily, zen and arcade",
+  "saveKey": "breakout-royale-save-v1"
+}

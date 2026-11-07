@@ -1,0 +1,13 @@
+.godot/
+*.import
+!icon.svg.import
+web/play/index.*
+web/play/*.wasm
+web/play/*.pck
+web/play/*.js
+!web/play/arcade-bridge.js
+web/play/*.png
+web/play/*.worklet.js
+web/play/arcade-client.js
+web/play/.nojekyll
+.DS_Store

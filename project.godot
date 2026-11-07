@@ -1,0 +1,50 @@
+; Breakout Royale 3D — Godot 4.7 project configuration
+; Engine config: edit with care.
+
+config_version=5
+
+[application]
+
+config/name="Breakout Royale 3D"
+config/version="1.0.0"
+config/description="A portrait-first 3D brick-breaker: 1,000 levels, 20 worlds, 20 bosses and 40 power-ups."
+run/main_scene="res://Scenes/Main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.035, 0.02, 0.07, 1)
+boot_splash/show_image=false
+
+[autoload]
+
+Save="*res://Scripts/Core/SaveManager.gd"
+Audio="*res://Scripts/Core/AudioManager.gd"
+Arcade="*res://Scripts/Core/ArcadeBridge.gd"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/window_width_override=430
+window/size/window_height_override=764
+window/stretch/mode="canvas_items"
+; Portrait is the only supported presentation: on a landscape desktop the
+; 9:16 arena is letterboxed rather than stretched.
+window/stretch/aspect="keep"
+window/size/handheld/orientation=1
+window/size/resizable=true
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=2
+environment/defaults/default_clear_color=Color(0.035, 0.02, 0.07, 1)
+
+[audio]
+
+driver/mix_rate=44100
