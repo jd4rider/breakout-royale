@@ -1,4 +1,5 @@
 extends Node
+const TipJarLink := preload("res://Scripts/Core/TipJar.gd")
 ## App shell: title, campaign map, level grid, HUD, results, trophies, settings.
 ## Gameplay itself lives in `GameField`; this script owns navigation and saves.
 
@@ -731,6 +732,8 @@ func _on_finished(result: Dictionary) -> void:
 		panel.add_child(_button("TRY AGAIN", 24, 84, PINK,
 				func() -> void: _start_game(mode, _level_id)))
 	panel.add_child(_ghost_button("LEVEL MAP" if mode == "campaign" else "MENU", _quit_to_menu, 74))
+	# Quiet support link: results card only, under the actions.
+	panel.add_child(_ghost_button("☕ BUY ME A COFFEE", TipJarLink.open, 56))
 
 
 # --------------------------------------------------------------------------
